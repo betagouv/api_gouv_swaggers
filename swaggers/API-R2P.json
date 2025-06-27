@@ -1,0 +1,1349 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API_R2P",
+    "description": "Recherche des personnes physiques dans les référentiels de la DGFiP selon 3 modes: par état civil avec ou sans adresse (retourne: état civil, adresse, SPI), par SPI (retourne: état civil, adresse, SPI) et par état civil complet (retourne un SPI (uniquement pour le cas du LEP)). Cette recherche s'appuie sur les référentiels Pers, Agatha, Ocfi, Topad.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://172.27.62.2:8080/r2p-v1",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Recherche stricte par état civil",
+      "description": "Recherche stricte  par état civil   pour une restitution du SPI uniquement"
+    },
+    {
+      "name": "Recherche par identifiant",
+      "description": "Recherche de personne physique par identifiant"
+    },
+    {
+      "name": "[@Ressource1] Recherche de personne physique par critères ",
+      "description": "Recherche de personne physique par critères"
+    }
+  ],
+  "paths": {
+    "/personne": {
+      "get": {
+        "tags": [
+          "[@Ressource1] Recherche de personne physique par critères "
+        ],
+        "summary": "Recherche de personne physique par critères",
+        "description": "Recherche de personne physique par critères",
+        "operationId": "recherche",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Identifiant de corrélation de la requête (format UUID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "110e8400-e29b-11d4-a716-446655440000"
+          },
+          {
+            "name": "X-JWT-Assertion",
+            "in": "header",
+            "description": "X-JWT-Assertion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJhcGljb250ZXh0IjoiXC9tb2NrXC9iYWNrZW5kXC8xLjAuMCIsInN1YnNjcmliZXIiOiJhcGltMiIsImVuZHVzZXIiOiJhcGltMkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbnRpZXIiOiJVbmxpbWl0ZWQiLCJlbmR1c2VyVGVuYW50SWQiOiItMTIzNCIsImlzcyI6ImFwaS5pbXBvdHMuZ291di5mclwvYXBpbSIsIm9yZ2FuaXNhdGlvbiI6IkFQSU0yIiwidXNlcnR5cGUiOiJhcGltMkBjYXJib24uc3VwZXIiLCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInZlcnNpb24iOiIxLjAuMCIsImFwcGxpY2F0aW9uIjoiRGVmYXVsdEFwcGxpY2F0aW9uIiwidGllciI6IlVubGltaXRlZCIsImFwcGxpY2F0aW9uaWQiOiI1NSIsImV4cCI6MTY0MjQxNjExMX0=."
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "26 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "identifiant": {
+                      "spi": "1257553562447"
+                    },
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/personneSansSpi": {
+      "get": {
+        "tags": [
+          "[@Ressource1] Recherche de personne physique par critères "
+        ],
+        "summary": "Recherche de personne physique sans spi par critères",
+        "description": "Recherche de personne physique sans spi par critères",
+        "operationId": "rechercheSansSpi",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Identifiant de corrélation de la requête (format UUID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "110e8400-e29b-11d4-a716-446655440000"
+          },
+          {
+            "name": "X-JWT-Assertion",
+            "in": "header",
+            "description": "X-JWT-Assertion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJhcGljb250ZXh0IjoiXC9tb2NrXC9iYWNrZW5kXC8xLjAuMCIsInN1YnNjcmliZXIiOiJhcGltMiIsImVuZHVzZXIiOiJhcGltMkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbnRpZXIiOiJVbmxpbWl0ZWQiLCJlbmR1c2VyVGVuYW50SWQiOiItMTIzNCIsImlzcyI6ImFwaS5pbXBvdHMuZ291di5mclwvYXBpbSIsIm9yZ2FuaXNhdGlvbiI6IkFQSU0yIiwidXNlcnR5cGUiOiJhcGltMkBjYXJib24uc3VwZXIiLCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInZlcnNpb24iOiIxLjAuMCIsImFwcGxpY2F0aW9uIjoiRGVmYXVsdEFwcGxpY2F0aW9uIiwidGllciI6IlVubGltaXRlZCIsImFwcGxpY2F0aW9uaWQiOiI1NSIsImV4cCI6MTY0MjQxNjExMX0=."
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "26 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneSanSpiReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "codePostal": "75012",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/personne/{spi}": {
+      "get": {
+        "tags": [
+          "Recherche par identifiant"
+        ],
+        "summary": "Recherche de personne physique par identifiant SPI",
+        "description": "Restituer des personne physique par identifiant SPI",
+        "operationId": "rechercherParsPi",
+        "parameters": [
+          {
+            "name": "spi",
+            "in": "path",
+            "description": "spi",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "0901465691371"
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Identifiant de corrélation de la requête (format UUID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "110e8400-e29b-11d4-a716-446655440000"
+          },
+          {
+            "name": "X-JWT-Assertion",
+            "in": "header",
+            "description": "X-JWT-Assertion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJhcGljb250ZXh0IjoiXC9tb2NrXC9iYWNrZW5kXC8xLjAuMCIsInN1YnNjcmliZXIiOiJhcGltMiIsImVuZHVzZXIiOiJhcGltMkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbnRpZXIiOiJVbmxpbWl0ZWQiLCJlbmR1c2VyVGVuYW50SWQiOiItMTIzNCIsImlzcyI6ImFwaS5pbXBvdHMuZ291di5mclwvYXBpbSIsIm9yZ2FuaXNhdGlvbiI6IkFQSU0yIiwidXNlcnR5cGUiOiJhcGltMkBjYXJib24uc3VwZXIiLCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInZlcnNpb24iOiIxLjAuMCIsImFwcGxpY2F0aW9uIjoiRGVmYXVsdEFwcGxpY2F0aW9uIiwidGllciI6IlVubGltaXRlZCIsImFwcGxpY2F0aW9uaWQiOiI1NSIsImV4cCI6MTY0MjQxNjExMX0=."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "identifiant": {
+                      "spi": "1257553562447"
+                    },
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/personne/spi": {
+      "get": {
+        "tags": [
+          "Recherche stricte par état civil"
+        ],
+        "summary": "Recherche du SPI par état civil",
+        "description": "Recherche du SPI par état civil",
+        "operationId": "recherche_1",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Identifiant de corrélation de la requête (format UUID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "110e8400-e29b-11d4-a716-446655440000"
+          },
+          {
+            "name": "X-JWT-Assertion",
+            "in": "header",
+            "description": "X-JWT-Assertion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJhcGljb250ZXh0IjoiXC9tb2NrXC9iYWNrZW5kXC8xLjAuMCIsInN1YnNjcmliZXIiOiJhcGltMiIsImVuZHVzZXIiOiJhcGltMkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbnRpZXIiOiJVbmxpbWl0ZWQiLCJlbmR1c2VyVGVuYW50SWQiOiItMTIzNCIsImlzcyI6ImFwaS5pbXBvdHMuZ291di5mclwvYXBpbSIsIm9yZ2FuaXNhdGlvbiI6IkFQSU0yIiwidXNlcnR5cGUiOiJhcGltMkBjYXJib24uc3VwZXIiLCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInZlcnNpb24iOiIxLjAuMCIsImFwcGxpY2F0aW9uIjoiRGVmYXVsdEFwcGxpY2F0aW9uIiwidGllciI6IlVubGltaXRlZCIsImFwcGxpY2F0aW9uaWQiOiI1NSIsImV4cCI6MTY0MjQxNjExMX0=."
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdentifiantEnveloppe"
+                },
+                "example": {
+                  "identifiant": {
+                    "spi": "1257553562447"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/etatSante": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Vérifier le statut de l'API",
+        "description": "Ressource permettant de vérifiant la disponibilité de l'API",
+        "operationId": "information",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "description": "Identifiant de corrélation de la requête (format UUID)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "110e8400-e29b-11d4-a716-446655440000"
+          },
+          {
+            "name": "X-JWT-Assertion",
+            "in": "header",
+            "description": "X-JWT-Assertion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJhcGljb250ZXh0IjoiXC9tb2NrXC9iYWNrZW5kXC8xLjAuMCIsInN1YnNjcmliZXIiOiJhcGltMiIsImVuZHVzZXIiOiJhcGltMkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbnRpZXIiOiJVbmxpbWl0ZWQiLCJlbmR1c2VyVGVuYW50SWQiOiItMTIzNCIsImlzcyI6ImFwaS5pbXBvdHMuZ291di5mclwvYXBpbSIsIm9yZ2FuaXNhdGlvbiI6IkFQSU0yIiwidXNlcnR5cGUiOiJhcGltMkBjYXJib24uc3VwZXIiLCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInZlcnNpb24iOiIxLjAuMCIsImFwcGxpY2F0aW9uIjoiRGVmYXVsdEFwcGxpY2F0aW9uIiwidGllciI6IlVubGltaXRlZCIsImFwcGxpY2F0aW9uaWQiOiI1NSIsImV4cCI6MTY0MjQxNjExMX0=."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "L'API est disponible",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/etatSante"
+                },
+                "example": {
+                  "descriptif": "L'API est opérationnelle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "L'API est actuellement indisponible",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdresseReponse": {
+        "type": "object",
+        "properties": {
+          "cdPays": {
+            "type": "string",
+            "description": "Code INSEE du pays de l'adresse",
+            "example": "99100"
+          },
+          "lbPays": {
+            "type": "string",
+            "description": "Libellé du pays de l'adresse",
+            "example": "FRANCE"
+          },
+          "cdDepartement": {
+            "type": "string",
+            "description": "Code INSEE du département de l'adresse",
+            "example": "16"
+          },
+          "lbDepartement": {
+            "type": "string",
+            "description": "Libellé du département de l'adresse",
+            "example": "CHARENTE"
+          },
+          "cdTOM": {
+            "type": "string",
+            "description": "Code INSEE du TOM de l'adresse",
+            "example": "975"
+          },
+          "lbTOM": {
+            "type": "string",
+            "description": "Libellé du TOM de l'adresse",
+            "example": "ST-PIERRE-ET-MIQUELON"
+          },
+          "cdCommune": {
+            "type": "string",
+            "description": "Code INSEE de la commune de l'adresse",
+            "example": "015"
+          },
+          "lbCommune": {
+            "type": "string",
+            "description": "Libellé de la commune de l'adresse",
+            "example": "ANGOULEME"
+          },
+          "cdVoie": {
+            "type": "string",
+            "description": "Code de la de la voie de l'adresse",
+            "example": "2564"
+          },
+          "lbVoie": {
+            "type": "string",
+            "description": "Libellé de la voie de l'adresse",
+            "example": "RTE DU GAL DE GAULLE"
+          },
+          "numeroVoie": {
+            "type": "string",
+            "description": "Numéro de la voie de l'adresse",
+            "example": "35"
+          },
+          "indiceDeRepetition": {
+            "type": "string",
+            "description": "Indice de répétion de l'adresse (B = bis, T = ter, Q = quater)",
+            "example": "B"
+          },
+          "complementAdresse": {
+            "type": "string",
+            "description": "complement adresse",
+            "example": "4EME ETAGE, 5EME ESCALIER"
+          }
+        },
+        "description": "Informations d'adresse de la personne"
+      },
+      "EtatCivilReponse": {
+        "type": "object",
+        "properties": {
+          "cdSexe": {
+            "type": "string",
+            "description": "Code du sexe de la personne : 1 masculin, 2 féminin",
+            "example": "2"
+          },
+          "lbNomNaissance": {
+            "type": "string",
+            "description": "nom de naissance",
+            "example": "MARTIN"
+          },
+          "lbPrenomNaissance": {
+            "type": "string",
+            "description": "Prénom de naissance",
+            "writeOnly": true,
+            "example": "JEANNE MARIE"
+          },
+          "lbNomUsage": {
+            "type": "string",
+            "description": "Nom d'usage",
+            "example": "DUPONT"
+          },
+          "lbPrenomUsage": {
+            "type": "string",
+            "description": "Prénom d'usage",
+            "example": "JEANNE"
+          },
+          "anneeNaissance": {
+            "type": "string",
+            "description": "Année de naissance au format AAAA",
+            "example": "1978"
+          },
+          "moisNaissance": {
+            "type": "string",
+            "description": "Mois de naissance au format MM",
+            "example": "08"
+          },
+          "jourNaissance": {
+            "type": "string",
+            "description": "Jour de naissance au format JJ",
+            "example": "22"
+          },
+          "cdPaysNaissance": {
+            "type": "string",
+            "description": "Code INSEE du pays de naissance",
+            "example": "99100"
+          },
+          "cdDeptNaissance": {
+            "type": "string",
+            "description": "Code INSEE du département de naissance",
+            "example": "75"
+          },
+          "cdTOMNaissance": {
+            "type": "string",
+            "description": "Code INSEE du TOM de naissance",
+            "example": "975"
+          },
+          "cdCommuneNaissance": {
+            "type": "string",
+            "description": "cdCommuneNaissance",
+            "example": "115"
+          },
+          "lieuNaissance": {
+            "$ref": "#/components/schemas/LieuValeur"
+          }
+        },
+        "description": "État civil de la personne"
+      },
+      "IdentifiantReponse": {
+        "type": "object",
+        "properties": {
+          "spi": {
+            "type": "string",
+            "description": "L'identifiant SPI de la personne sur 13 caractères numériques",
+            "example": "1899582886173"
+          }
+        },
+        "description": "Informations d'identification de la personne"
+      },
+      "LieuValeur": {
+        "type": "object",
+        "properties": {
+          "cdCommune": {
+            "type": "string"
+          },
+          "cdCommuneAJour": {
+            "type": "string"
+          },
+          "cdDept": {
+            "type": "string"
+          },
+          "cdDeptAJour": {
+            "type": "string"
+          },
+          "cdNatVoie": {
+            "type": "string"
+          },
+          "cdPays": {
+            "type": "string"
+          },
+          "cdPaysAJour": {
+            "type": "string"
+          },
+          "cdReg": {
+            "type": "string"
+          },
+          "cdRegAJour": {
+            "type": "string"
+          },
+          "cdVoie": {
+            "type": "string"
+          },
+          "cdVoieAJour": {
+            "type": "string"
+          },
+          "indRep": {
+            "type": "string"
+          },
+          "lbCommune": {
+            "type": "string"
+          },
+          "lbCompAdres": {
+            "type": "string"
+          },
+          "lbDept": {
+            "type": "string"
+          },
+          "lbPays": {
+            "type": "string"
+          },
+          "lbReg": {
+            "type": "string"
+          },
+          "lbVoie": {
+            "type": "string"
+          },
+          "noVoie": {
+            "type": "string"
+          }
+        }
+      },
+      "PersonneReponse": {
+        "type": "object",
+        "properties": {
+          "identifiant": {
+            "$ref": "#/components/schemas/IdentifiantReponse"
+          },
+          "etatCivil": {
+            "$ref": "#/components/schemas/EtatCivilReponse"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/AdresseReponse"
+          }
+        },
+        "description": "Correspond aux informations d'une personne physique"
+      },
+      "PersonneReponseEnveloppe": {
+        "type": "object",
+        "properties": {
+          "personnePhysique": {
+            "$ref": "#/components/schemas/PersonneReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse"
+      },
+      "Erreur": {
+        "type": "object",
+        "properties": {
+          "erreur": {
+            "$ref": "#/components/schemas/erreur"
+          }
+        }
+      },
+      "erreur": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Code de l'erreur",
+            "example": "42"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message de description de l'erreur",
+            "example": "Une erreur est survenue"
+          },
+          "horodatage": {
+            "type": "string",
+            "description": "Horodatage de l'erreur",
+            "example": "2021-06-25T19:39:56+02:00"
+          }
+        },
+        "description": "erreur"
+      },
+      "AdresseAvecCodePostalReponse": {
+        "type": "object",
+        "properties": {
+          "cdPays": {
+            "type": "string",
+            "description": "Code INSEE du pays de l'adresse",
+            "example": "99100"
+          },
+          "lbPays": {
+            "type": "string",
+            "description": "Libellé du pays de l'adresse",
+            "example": "FRANCE"
+          },
+          "codePostal": {
+            "type": "string",
+            "description": "codePostal",
+            "example": "75012"
+          },
+          "cdDepartement": {
+            "type": "string",
+            "description": "Code INSEE du département de l'adresse",
+            "example": "16"
+          },
+          "lbDepartement": {
+            "type": "string",
+            "description": "Libellé du département de l'adresse",
+            "example": "CHARENTE"
+          },
+          "cdTOM": {
+            "type": "string",
+            "description": "Code INSEE du TOM de l'adresse",
+            "example": "975"
+          },
+          "lbTOM": {
+            "type": "string",
+            "description": "Libellé du TOM de l'adresse",
+            "example": "ST-PIERRE-ET-MIQUELON"
+          },
+          "cdCommune": {
+            "type": "string",
+            "description": "Code INSEE de la commune de l'adresse",
+            "example": "015"
+          },
+          "lbCommune": {
+            "type": "string",
+            "description": "Libellé de la commune de l'adresse",
+            "example": "ANGOULEME"
+          },
+          "cdVoie": {
+            "type": "string",
+            "description": "Code de la de la voie de l'adresse",
+            "example": "2564"
+          },
+          "lbVoie": {
+            "type": "string",
+            "description": "Libellé de la voie de l'adresse",
+            "example": "RTE DU GAL DE GAULLE"
+          },
+          "numeroVoie": {
+            "type": "string",
+            "description": "Numéro de la voie de l'adresse",
+            "example": "35"
+          },
+          "indiceDeRepetition": {
+            "type": "string",
+            "description": "Indice de répétion de l'adresse (B = bis, T = ter, Q = quater)",
+            "example": "B"
+          },
+          "complementAdresse": {
+            "type": "string",
+            "description": "complement adresse",
+            "example": "4EME ETAGE, 5EME ESCALIER"
+          }
+        },
+        "description": "Informations d'adresse de la personne"
+      },
+      "PersonneSanSpiReponseEnveloppe": {
+        "type": "object",
+        "properties": {
+          "personnePhysique": {
+            "$ref": "#/components/schemas/PersonneSansSpiReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse sans spi"
+      },
+      "PersonneSansSpiReponse": {
+        "type": "object",
+        "properties": {
+          "etatCivil": {
+            "$ref": "#/components/schemas/EtatCivilReponse"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/AdresseAvecCodePostalReponse"
+          }
+        },
+        "description": "Correspond aux informations d'une personne physique sans le spi"
+      },
+      "IdentifiantEnveloppe": {
+        "type": "object",
+        "properties": {
+          "identifiant": {
+            "$ref": "#/components/schemas/IdentifiantReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse"
+      },
+      "etatSante": {
+        "type": "object",
+        "properties": {
+          "descriptif": {
+            "type": "string",
+            "description": "L'API est opérationnelle",
+            "example": "L'API est opérationnelle"
+          }
+        }
+      }
+    }
+  }
+}
