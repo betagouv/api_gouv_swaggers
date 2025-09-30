@@ -1,0 +1,5425 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SFiP",
+    "description": "Le courtier fonctionnel «SERVICES_FIP» propose au partenaire un catalogue de services issu des APIs existantes.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://10.156.14.219:468/sfip/v1"
+    },
+    {
+      "url": "http://10.156.14.219:469/sfip/v1"
+    }
+  ],
+  "security": [
+    {
+      "default": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "SFiP",
+      "description": "API_Services_Finances_Publiques"
+    }
+  ],
+  "paths": {
+    "/information": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Vérifier le statut de l'API",
+        "description": "Ressource permettant de vérifiant la disponibilité de l'API",
+        "operationId": "information",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "L'API est disponible",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "descriptif": "L'API est opérationnelle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "L'API est actuellement indisponible",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": []
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/etatSante": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Vérifier le statut de l'API",
+        "description": "Ressource permettant de vérifiant la disponibilité de l'API",
+        "operationId": "etatSante",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+            },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+            },
+        ],
+        "responses": {
+          "200": {
+            "description": "L'API est disponible",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "descriptif": "L'API est opérationnelle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "L'API est actuellement indisponible",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": []
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02AA/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situations IR Assiettes",
+        "description": "Restituer les données de la dernière imposition à l’IR",
+        "operationId": "service2aa",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "sitFam": "V",
+                  "nmNaiDec1": "DUBIGNOT",
+                  "prnmDec1": "Jean Philippe Arnaud",
+                  "rev": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_donnees_fiscales_usagers"
+            ]
+          },
+          {
+            "default": [
+              "sfip_donnees_fiscales_usagers"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02BA/multiple/annrev/{annrev}": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situation IR multiple",
+        "description": "Restituer les données fiscales les plus récentes en fonction  d'un millésime (1 ou 2 déclarations en cas de décès).",
+        "operationId": "service2ba",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "situationsIR": [
+                    {
+                      "rfr": 0,
+                      "sitFam": "string",
+                      "nbPart": 0,
+                      "pac": {
+                        "nbPac": 0,
+                        "nbPacF": 0,
+                        "nbPacG": 0,
+                        "nbPacH": 0,
+                        "nbPacI": 0,
+                        "nbPacR": 0,
+                        "nbPacJ": 0,
+                        "nbPacN": 0,
+                        "nbPacP": 0
+                      },
+                      "nmNaiDec1": "string",
+                      "nmUsaDec1": "string",
+                      "prnmDec1": "string",
+                      "dateNaisDec1": {
+                        "jour": "string",
+                        "mois": "string",
+                        "annee": "string"
+                      },
+                      "dptNaissDec1": "string",
+                      "lieuNaissDec1": "string",
+                      "nmNaiDec2": "string",
+                      "nmUsaDec2": "string",
+                      "prnmDec2": "string",
+                      "dateNaisDec2": {
+                        "jour": "string",
+                        "mois": "string",
+                        "annee": "string"
+                      },
+                      "dptNaissDec2": "string",
+                      "lieuNaissDec2": "string",
+                      "aft": "string",
+                      "aftDetail": {
+                        "complementAdresse": "string",
+                        "voie": "string",
+                        "getcommune": "string",
+                        "getcodePostal": "string"
+                      },
+                      "sitParIso": "string",
+                      "pensAlPer": 0,
+                      "indDeficit": "string",
+                      "revenuBrutGlobal": 0,
+                      "rev": {
+                        "tspr": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "rcm": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "pv": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "fonc": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "pro": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "chges": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "rici": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "alpha": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "div": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ]
+                      },
+                      "sitPart": "string",
+                      "sitParDeclaree": {
+                        "sitPartP": "string",
+                        "sitPartF": "string",
+                        "sitPartW": "string",
+                        "sitComb": "string",
+                        "pensVeufGuerre": "string",
+                        "indEnfSeul5ansMin": "string",
+                        "indNonSeul": "string"
+                      },
+                      "indOptionImpotSepar": "string",
+                      "mntRevbareme": 0,
+                      "spiDec1": "string",
+                      "spiDec2": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_multiple_donnees_fiscales"
+            ]
+          },
+          {
+            "default": [
+              "sfip_multiple_donnees_fiscales"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02CA/annrev/{annrev}/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situations IR avec un millésime",
+        "description": "Restitution des données fiscales précises de l'usager en fonction d'un millésime",
+        "operationId": "service2ca",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "rfr": 23055,
+                  "sitFam": "V",
+                  "nbPart": 1,
+                  "pac": {
+                    "nbPac": 0,
+                    "nbPacF": 0,
+                    "nbPacH": 0,
+                    "nbPacR": 0,
+                    "nbPacJ": 0,
+                    "nbPacN": 0,
+                    "nbPacP": 0
+                  },
+                  "nmNaiDec1": "DUBIGNOT",
+                  "nmUsaDec1": null,
+                  "prnmDec1": "Jean Philippe Arnaud",
+                  "nmNaiDec2": null,
+                  "nmUsaDec2": null,
+                  "prnmDec2": null,
+                  "sitParIso": null,
+                  "indDeficit": 0,
+                  "rev": {
+                    "rici": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_annee_donnees_fiscales_usagers"
+            ]
+          },
+          {
+            "default": [
+              "sfip_annee_donnees_fiscales_usagers"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02DA/ifi/annrev/{annrev}/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situation IR avec indicateur IFI",
+        "description": "Restituer l'indicateur d’imposition à l’IFI (ou ISF pour les années antérieures).",
+        "operationId": "service2da",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "indicateurIfiIsf": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_ifi_donnees_fiscales"
+            ]
+          },
+          {
+            "default": [
+              "sfip_ifi_donnees_fiscales"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02EA/deuxans/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situations IR deux ans",
+        "description": "Restituer les données fiscales disponibles d’un usager pour une année parmi les 2 dernières années disponibles",
+        "operationId": "service2ea",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "annRevenu": 0,
+                  "rfr": 0,
+                  "sitFam": "string",
+                  "nbPart": 0,
+                  "pac": {
+                    "nbPac": 0,
+                    "nbPacF": 0,
+                    "nbPacG": 0,
+                    "nbPacH": 0,
+                    "nbPacI": 0,
+                    "nbPacR": 0,
+                    "nbPacJ": 0,
+                    "nbPacN": 0,
+                    "nbPacP": 0
+                  },
+                  "nmNaiDec1": "string",
+                  "nmUsaDec1": "string",
+                  "prnmDec1": "string",
+                  "dateNaisDec1": {
+                    "jour": "string",
+                    "mois": "string",
+                    "annee": "string"
+                  },
+                  "dptNaissDec1": "string",
+                  "lieuNaissDec1": "string",
+                  "nmNaiDec2": "string",
+                  "nmUsaDec2": "string",
+                  "prnmDec2": "string",
+                  "dateNaisDec2": {
+                    "jour": "string",
+                    "mois": "string",
+                    "annee": "string"
+                  },
+                  "dptNaissDec2": "string",
+                  "lieuNaissDec2": "string",
+                  "aft": "string",
+                  "aftDetail": {
+                    "complementAdresse": "string",
+                    "voie": "string",
+                    "getcommune": "string",
+                    "getcodePostal": "string"
+                  },
+                  "sitParIso": "string",
+                  "pensAlPer": 0,
+                  "indDeficit": "string",
+                  "revenuBrutGlobal": 0,
+                  "sitPart": "string",
+                  "sitParDeclaree": {
+                    "sitPartP": "string",
+                    "sitPartF": "string",
+                    "sitPartW": "string",
+                    "sitComb": "string",
+                    "pensVeufGuerre": "string",
+                    "indEnfSeul5ansMin": "string",
+                    "indNonSeul": "string"
+                  },
+                  "indOptionImpotSepar": "string",
+                  "mntRevbareme": 0,
+                  "datRec": "string",
+                  "datEtab": "string",
+                  "impAvImput": 0,
+                  "montTotIr": 0,
+                  "revImposable": 0,
+                  "numRole": "string",
+                  "fipNum": "string",
+                  "rev": {
+                    "tspr": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "rcm": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "pv": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "fonc": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "pro": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "chges": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "rici": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "alpha": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "div": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_2ans_donnees_fiscales"
+            ]
+          },
+          {
+            "default": [
+              "sfip_2ans_donnees_fiscales"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02FA/facture/annrev/{annrev}/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Situation IR Facture",
+        "description": "Restituer les données les plus récentes de la ressource facture/avis IR de l'année sélectionnée.",
+        "operationId": "service2fa",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "rfr": 0,
+                  "sitFam": "string",
+                  "nbPart": 0,
+                  "pac": {
+                    "nbPac": 0,
+                    "nbPacF": 0,
+                    "nbPacG": 0,
+                    "nbPacH": 0,
+                    "nbPacI": 0,
+                    "nbPacR": 0,
+                    "nbPacJ": 0,
+                    "nbPacN": 0,
+                    "nbPacP": 0
+                  },
+                  "nmNaiDec1": "string",
+                  "nmUsaDec1": "string",
+                  "prnmDec1": "string",
+                  "dateNaisDec1": {
+                    "jour": "string",
+                    "mois": "string",
+                    "annee": "string"
+                  },
+                  "dptNaissDec1": "string",
+                  "lieuNaissDec1": "string",
+                  "nmNaiDec2": "string",
+                  "nmUsaDec2": "string",
+                  "prnmDec2": "string",
+                  "dateNaisDec2": {
+                    "jour": "string",
+                    "mois": "string",
+                    "annee": "string"
+                  },
+                  "dptNaissDec2": "string",
+                  "lieuNaissDec2": "string",
+                  "aft": "string",
+                  "aftDetail": {
+                    "complementAdresse": "string",
+                    "voie": "string",
+                    "getcommune": "string",
+                    "getcodePostal": "string"
+                  },
+                  "sitParIso": "string",
+                  "pensAlPer": 0,
+                  "indDeficit": "string",
+                  "revenuBrutGlobal": 0,
+                  "sitPart": "string",
+                  "sitParDeclaree": {
+                    "sitPartP": "string",
+                    "sitPartF": "string",
+                    "sitPartW": "string",
+                    "sitComb": "string",
+                    "pensVeufGuerre": "string",
+                    "indEnfSeul5ansMin": "string",
+                    "indNonSeul": "string"
+                  },
+                  "indOptionImpotSepar": "string",
+                  "mntRevbareme": 0,
+                  "datRec": "string",
+                  "datEtab": "string",
+                  "impAvImput": 0,
+                  "montTotIr": 0,
+                  "revImposable": 0,
+                  "numRole": "string",
+                  "fipNum": "string",
+                  "facture": [
+                    {
+                      "numLigne": 0,
+                      "codeLigne": "string",
+                      "libelleLigne": "string",
+                      "colonne1": "string",
+                      "colonne2": "string",
+                      "colonne3": "string",
+                      "colonne4": "string"
+                    }
+                  ],
+                  "rev": {
+                    "tspr": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "rcm": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "pv": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "fonc": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "pro": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "chges": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "rici": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "alpha": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ],
+                    "div": [
+                      {
+                        "code": "string",
+                        "valeur": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_factures_donnees_fiscales"
+            ]
+          },
+          {
+            "default": [
+              "sfip_factures_donnees_fiscales"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02GA/departement/{departement}/annrev/{annrev}/bareme/{bareme}/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Ressource LEP",
+        "description": "Restituer l’indicateur LEP par critères",
+        "operationId": "lep",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_LEP"
+          },
+          {
+            "name": "departement",
+            "in": "path",
+            "description": "Code du département ou TOM. Format: 2 caractères alphanumériques suivis de 0 (métropole): 130, 750... 3 caractères alphanumériques (TOM et DOM)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 130
+          },
+          {
+            "name": "bareme",
+            "in": "path",
+            "description": "Année de barême",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2022
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "statut": "O"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_lep"
+            ]
+          },
+          {
+            "default": [
+              "sfip_lep"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/02HA/dernieresituation/ir/annrev/{annrev}/personne": {
+      "get": {
+        "tags": [
+          "SFiP"
+        ],
+        "summary": "Dernière situation IR avec veuvage",
+        "description": "Restituer les données fiscales les plus récentes en fonction  d'un millésime avec gestion des situations de veuvage (1 ou 2 déclarations)",
+        "operationId": "service2ha",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "ID_Teleservice",
+            "in": "header",
+            "description": "Identifiant de téléservice appelant",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SFIP_ACOSS_CISAP_exp2_HorsFC"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "veuvage",
+            "in": "query",
+            "description": "En présence d'une situation de veuvage de l'usager veuvage = true : restitution d'une seule déclaration (celle du survivant), si veuvage = false : restitution de deux déclarations",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            },
+            "example": "false"
+          },
+          {
+            "name": "annrev",
+            "in": "path",
+            "description": "Année de revenus",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 2020
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "situationsIR": [
+                    {
+                      "rfr": 0,
+                      "sitFam": "string",
+                      "nbPart": 0,
+                      "pac": {
+                        "nbPac": 0,
+                        "nbPacF": 0,
+                        "nbPacG": 0,
+                        "nbPacH": 0,
+                        "nbPacI": 0,
+                        "nbPacR": 0,
+                        "nbPacJ": 0,
+                        "nbPacN": 0,
+                        "nbPacP": 0
+                      },
+                      "nmNaiDec1": "string",
+                      "nmUsaDec1": "string",
+                      "prnmDec1": "string",
+                      "dateNaisDec1": {
+                        "jour": "string",
+                        "mois": "string",
+                        "annee": "string"
+                      },
+                      "dptNaissDec1": "string",
+                      "lieuNaissDec1": "string",
+                      "nmNaiDec2": "string",
+                      "nmUsaDec2": "string",
+                      "prnmDec2": "string",
+                      "dateNaisDec2": {
+                        "jour": "string",
+                        "mois": "string",
+                        "annee": "string"
+                      },
+                      "dptNaissDec2": "string",
+                      "lieuNaissDec2": "string",
+                      "aft": "string",
+                      "aftDetail": {
+                        "complementAdresse": "string",
+                        "voie": "string",
+                        "getcommune": "string",
+                        "getcodePostal": "string"
+                      },
+                      "sitParIso": "string",
+                      "pensAlPer": 0,
+                      "indDeficit": "string",
+                      "revenuBrutGlobal": 0,
+                      "rev": {
+                        "tspr": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "rcm": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "pv": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "fonc": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "pro": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "chges": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "rici": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "alpha": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ],
+                        "div": [
+                          {
+                            "code": "string",
+                            "valeur": "string"
+                          }
+                        ]
+                      },
+                      "sitPart": "string",
+                      "sitParDeclaree": {
+                        "sitPartP": "string",
+                        "sitPartF": "string",
+                        "sitPartW": "string",
+                        "sitComb": "string",
+                        "pensVeufGuerre": "string",
+                        "indEnfSeul5ansMin": "string",
+                        "indNonSeul": "string"
+                      },
+                      "indOptionImpotSepar": "string",
+                      "mntRevbareme": 0,
+                      "spiDec1": "string",
+                      "spiDec2": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 5000,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_derniere_ir_multiple_donnees_fiscales"
+            ]
+          },
+          {
+            "default": [
+              "sfip_derniere_ir_multiple_donnees_fiscales"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/demandeDeService/01AA/personne": {
+      "get": {
+        "tags": [
+          "[@SFiP] Recherche de personne physique par critères"
+        ],
+        "summary": "Recherche de personne physique par critères",
+        "description": "Recherche de personne physique par critères",
+        "operationId": "personne",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom de naissance de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance de la personne recherchée, 20 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole) 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM . Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeVoie",
+            "in": "query",
+            "description": "4 caractères alphanumériques",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "38 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spi",
+            "in": "query",
+            "description": "Numéro fiscal SPI sur 13 caractères (chiffres uniquement) ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recherche réussie",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Information"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "etatCivil": {
+                      "cdSexe": "0",
+                      "lbNomNaissance": "DUBIGNOT",
+                      "lbPrenomNaissance": "Jean Philippe Arnaud",
+                      "lbNomUsage": "DUBIGNOT",
+                      "lbPrenomUsage": "Jean Philippe Arnaud",
+                      "anneeNaissance": "1943",
+                      "moisNaissance": "06",
+                      "jourNaissance": "15",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "109"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0881",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problème sur le format de données",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4000,
+                    "message": "Un des paramètres en entrée est non conforme aux valeurs possibles",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "L'accès à cette ressource est non autorisé",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4033,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune personne trouvée",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4040,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Aucun résultat",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 4101,
+                    "message": "Absence de réponse",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "application/vnd.dgfip.sfip.v1.0+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Internal Server Error «Erreur de traitement – demande à renouveler»",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": [
+              "sfip_recherche_personne_physique"
+            ]
+          },
+          {
+            "default": [
+              "sfip_recherche_personne_physique"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/personne": {
+      "get": {
+        "tags": [
+          "[@R2P] Recherche de personne physique par critères"
+        ],
+        "summary": "Recherche de personne physique par critères",
+        "description": "Recherche de personne physique par critères",
+        "operationId": "recherche",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "26 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "identifiant": {
+                      "spi": "1257553562447"
+                    },
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": [
+              "api_r2p_recherche_personne_physique"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/personneSansSpi": {
+      "get": {
+        "tags": [
+          "[@R2P] Recherche de personne physique sans spi par critères "
+        ],
+        "summary": "Recherche de personne physique sans spi par critères",
+        "description": "Recherche de personne physique sans spi par critères",
+        "operationId": "rechercheSansSpi",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "26 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneSanSpiReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "codePostal": "75012",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": [
+              "api_r2p_recherche_personne_physique_sans_spi"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/personne/{spi}": {
+      "get": {
+        "tags": [
+          "[@R2P] Recherche par identifiant"
+        ],
+        "summary": "Recherche de personne physique par identifiant SPI",
+        "description": "Restituer des personne physique par identifiant SPI",
+        "operationId": "rechercherParsPi",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "spi",
+            "in": "path",
+            "description": "spi",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "0901465691371"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "identifiant": {
+                      "spi": "1257553562447"
+                    },
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": [
+              "api_r2p_recherche_personne_physique"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/personneSansSpi/coordonnees": {
+      "get": {
+        "tags": [
+          "[@SFiP] Recherche de personne physique sans spi avec coordonnées"
+        ],
+        "summary": "Recherche de personne physique sans spi avec ses coordonnées",
+        "description": "Recherche de personne physique sans spi avec ses coordonnées",
+        "operationId": "rechercheSansSpiCoordonnees",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          },
+          {
+            "name": "adrCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeDept",
+            "in": "query",
+            "description": "Code du département ou TOM. Format : 2 caractères alphanumérique (métropole) 3 caractères alphanumérique (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole).  Ce code commune correspond au 3 derniers caractères du code INSEE de la commune. 2 caractères numériques (TOM et DOM) (cf nomenclature INSEE) . Cette zone ne peut être valorisée que si un département Métropole ou DOM est précisé",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrLibelleVoie",
+            "in": "query",
+            "description": "26 caractères alphanumériques. Cette zone ne peut être valorisée que si que si un département Métropole ou DOM et une commune sont précisés. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrIndiceRepetition",
+            "in": "query",
+            "description": "Indice de répétition de l’adresse (B = bis, T = ter, Q = quater)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "adrNumVoie",
+            "in": "query",
+            "description": "Numéro de l’adresse",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonneSanSpiReponseEnveloppe"
+                },
+                "example": {
+                  "personnePhysique": {
+                    "etatCivil": {
+                      "cdSexe": "2",
+                      "lbNomNaissance": "SIMON",
+                      "lbPrenomNaissance": "JACQUES",
+                      "lbNomUsage": "SIMON",
+                      "lbPrenomUsage": "JACQUES",
+                      "anneeNaissance": "1983",
+                      "moisNaissance": "07",
+                      "jourNaissance": "14",
+                      "cdPaysNaissance": "99100",
+                      "cdDeptNaissance": "75",
+                      "cdTOMNaissance": null,
+                      "cdCommuneNaissance": "112"
+                    },
+                    "adresse": {
+                      "cdPays": "99100",
+                      "lbPays": "FRANCE",
+                      "codePostal": "75012",
+                      "cdDepartement": "75",
+                      "lbDepartement": "PARIS",
+                      "cdTOM": null,
+                      "lbTOM": null,
+                      "cdCommune": "112",
+                      "lbCommune": "PARIS",
+                      "cdVoie": "0781",
+                      "lbVoie": "RUE DE BERCY",
+                      "numeroVoie": "139",
+                      "indiceDeRepetition": null,
+                      "complementAdresse": null
+                    },
+                    "coordonnees": {
+                      "telFixe": "+33 0123456789",
+                      "telPortable": "+33 0612345678",
+                      "courriel": "simon.jacques@gmail.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": [
+              "api_sfip_recherche_personne_physique_coordonnees"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    },
+    "/personne/spi": {
+      "get": {
+        "tags": [
+          "[@R2P] Recherche stricte par état civil"
+        ],
+        "summary": "Recherche du SPI par état civil",
+        "description": "Recherche du SPI par état civil",
+        "operationId": "recherche_1",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paramAuthorization"
+          },
+          {
+            "$ref": "#/components/parameters/paramXCorrelationID"
+          },
+          {
+            "name": "prenom",
+            "in": "query",
+            "description": "Prénom de naissance ou prénom d'usage  de la personne recherchée, 102 car. Max. par prénom",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Jean Philippe Arnaud"
+          },
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom  de naissance ou nom d'usage de la personne recherchée, 100 car. Max.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "DUBIGNOT"
+          },
+          {
+            "name": "sexe",
+            "in": "query",
+            "description": "Valeur possible : 1 = masculin ou 2 = féminin. Format : 1 caractère numérique",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "naisDate",
+            "in": "query",
+            "description": "Date de naissance, trois formats différents acceptés : AAAA, MM/AAAA, ou JJ/MM/AAAA",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "15/06/1943"
+          },
+          {
+            "name": "naisCodePays",
+            "in": "query",
+            "description": "Code du pays sur 5 caractères numériques (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99100
+          },
+          {
+            "name": "naisCodeDept",
+            "in": "query",
+            "description": "Code du département à la date de naissance ou TOM. Format : 2 caractères (métropole), 3 caractères (TOM et DOM)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 75
+          },
+          {
+            "name": "naisCodeCommune",
+            "in": "query",
+            "description": "Code commune, 3 caractères numériques (métropole),  2 caractères numériques (TOM et DOM) (cf nomenclature INSEE)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 109
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personne correspondant à la recherche",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdentifiantEnveloppe"
+                },
+                "example": {
+                  "identifiant": {
+                    "spi": "1257553562447"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40305,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Trop de réponse ou dossier non communicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne, merci de renseigner le numéro fiscal et la date de naissance",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Personne non trouvée",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40433,
+                    "message": "Informations non disponibles pour la personne merci de renseigner le numéro fiscal et la date de naissance.",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Une erreur est survenue",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erreur"
+                },
+                "example": {
+                  "erreur": {
+                    "code": 40401,
+                    "message": "Une erreur est survenue",
+                    "horodatage": "2022-01-20T13:03:01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "default": [
+              "api_r2p_resolution_spi"
+            ]
+          }
+        ],
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "6500_appels_par_min"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Erreur": {
+        "type": "object",
+        "properties": {
+          "erreur": {
+            "$ref": "#/components/schemas/erreur"
+          }
+        }
+      },
+      "erreur": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Code de l'erreur",
+            "format": "int32",
+            "example": 42
+          },
+          "message": {
+            "type": "string",
+            "description": "Message de description de l'erreur",
+            "example": "Une erreur est survenue"
+          },
+          "horodatage": {
+            "type": "string",
+            "description": "Horodatage de l'erreur",
+            "example": "2021-06-25T19:39:56+02:00"
+          }
+        },
+        "description": "erreur"
+      },
+      "Information": {
+        "type": "object",
+        "properties": {
+          "descriptif": {
+            "type": "string",
+            "description": "L'API est opérationnelle",
+            "example": "L'API est opérationnelle"
+          }
+        }
+      },
+      "PersonneReponseEnveloppe": {
+        "type": "object",
+        "properties": {
+          "personnePhysique": {
+            "$ref": "#/components/schemas/PersonneReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse"
+      },
+      "AdresseReponse": {
+        "type": "object",
+        "properties": {
+          "cdPays": {
+            "type": "string",
+            "description": "Code INSEE du pays de l'adresse",
+            "example": "99100"
+          },
+          "lbPays": {
+            "type": "string",
+            "description": "Libellé du pays de l'adresse",
+            "example": "FRANCE"
+          },
+          "cdDepartement": {
+            "type": "string",
+            "description": "Code INSEE du département de l'adresse",
+            "example": "16"
+          },
+          "lbDepartement": {
+            "type": "string",
+            "description": "Libellé du département de l'adresse",
+            "example": "CHARENTE"
+          },
+          "cdTOM": {
+            "type": "string",
+            "description": "Code INSEE du TOM de l'adresse",
+            "example": "975"
+          },
+          "lbTOM": {
+            "type": "string",
+            "description": "Libellé du TOM de l'adresse",
+            "example": "ST-PIERRE-ET-MIQUELON"
+          },
+          "cdCommune": {
+            "type": "string",
+            "description": "Code INSEE de la commune de l'adresse",
+            "example": "015"
+          },
+          "lbCommune": {
+            "type": "string",
+            "description": "Libellé de la commune de l'adresse",
+            "example": "ANGOULEME"
+          },
+          "cdVoie": {
+            "type": "string",
+            "description": "Code de la de la voie de l'adresse",
+            "example": "2564"
+          },
+          "lbVoie": {
+            "type": "string",
+            "description": "Libellé de la voie de l'adresse",
+            "example": "RTE DU GAL DE GAULLE"
+          },
+          "numeroVoie": {
+            "type": "string",
+            "description": "Numéro de la voie de l'adresse",
+            "example": "35"
+          },
+          "indiceDeRepetition": {
+            "type": "string",
+            "description": "Indice de répétion de l'adresse (B = bis, T = ter, Q = quater)",
+            "example": "B"
+          },
+          "complementAdresse": {
+            "type": "string",
+            "description": "Complément d'adresse",
+            "example": "Bat A Appt n°5"
+          }
+        },
+        "description": "Informations d'adresse de la personne"
+      },
+      "EtatCivilReponse": {
+        "type": "object",
+        "properties": {
+          "cdSexe": {
+            "type": "string",
+            "description": "Code du sexe de la personne : 1 masculin, 2 féminin",
+            "example": "2"
+          },
+          "lbNomNaissance": {
+            "type": "string",
+            "description": "nom de naissance",
+            "example": "MARTIN"
+          },
+          "lbPrenomNaissance": {
+            "type": "string",
+            "description": "Prénom de naissance",
+            "writeOnly": true,
+            "example": "JEANNE MARIE"
+          },
+          "lbNomUsage": {
+            "type": "string",
+            "description": "Nom d'usage",
+            "example": "DUPONT"
+          },
+          "lbPrenomUsage": {
+            "type": "string",
+            "description": "Prénom d'usage",
+            "example": "JEANNE"
+          },
+          "anneeNaissance": {
+            "type": "string",
+            "description": "Année de naissance au format AAAA",
+            "example": "1978"
+          },
+          "moisNaissance": {
+            "type": "string",
+            "description": "Mois de naissance au format MM",
+            "example": "08"
+          },
+          "jourNaissance": {
+            "type": "string",
+            "description": "Jour de naissance au format JJ",
+            "example": "22"
+          },
+          "cdPaysNaissance": {
+            "type": "string",
+            "description": "Code INSEE du pays de naissance",
+            "example": "99100"
+          },
+          "cdDeptNaissance": {
+            "type": "string",
+            "description": "Code INSEE du département de naissance",
+            "example": "75"
+          },
+          "cdTOMNaissance": {
+            "type": "string",
+            "description": "Code INSEE du TOM de naissance",
+            "example": "975"
+          },
+          "cdCommuneNaissance": {
+            "type": "string",
+            "description": "cdCommuneNaissance",
+            "example": "115"
+          },
+          "lieuNaissance": {
+            "$ref": "#/components/schemas/LieuValeur"
+          }
+        },
+        "description": "État civil de la personne"
+      },
+      "CoordonneesReponse": {
+        "type": "object",
+        "properties": {
+          "telFixe": {
+            "type": "string",
+            "description": "Numéro de téléphone fixe",
+            "example": "+33 0123456789"
+            },
+          "telPortable": {
+            "type": "string",
+            "description": "Numéro de téléphone portable",
+            "example": "+33 0612345678"
+            },
+          "courriel": {
+            "type": "string",
+            "description": "Adresse électronique",
+            "example": "jean.martin@yahoo.fr"
+            }
+        },
+        "description": "Infos complémentaires  de la personne"
+      },
+      "IdentifiantReponse": {
+        "type": "object",
+        "properties": {
+          "spi": {
+            "type": "string",
+            "description": "L'identifiant SPI de la personne sur 13 caractères numériques",
+            "example": "1899582886173"
+          }
+        },
+        "description": "Informations d'identification de la personne"
+      },
+      "LieuValeur": {
+        "type": "object",
+        "properties": {
+          "cdCommune": {
+            "type": "string"
+          },
+          "cdCommuneAJour": {
+            "type": "string"
+          },
+          "cdDept": {
+            "type": "string"
+          },
+          "cdDeptAJour": {
+            "type": "string"
+          },
+          "cdNatVoie": {
+            "type": "string"
+          },
+          "cdPays": {
+            "type": "string"
+          },
+          "cdPaysAJour": {
+            "type": "string"
+          },
+          "cdReg": {
+            "type": "string"
+          },
+          "cdRegAJour": {
+            "type": "string"
+          },
+          "cdVoie": {
+            "type": "string"
+          },
+          "cdVoieAJour": {
+            "type": "string"
+          },
+          "indRep": {
+            "type": "string"
+          },
+          "lbCommune": {
+            "type": "string"
+          },
+          "lbCompAdres": {
+            "type": "string"
+          },
+          "lbDept": {
+            "type": "string"
+          },
+          "lbPays": {
+            "type": "string"
+          },
+          "lbReg": {
+            "type": "string"
+          },
+          "lbVoie": {
+            "type": "string"
+          },
+          "noVoie": {
+            "type": "string"
+          }
+        }
+      },
+      "PersonneReponse": {
+        "type": "object",
+        "properties": {
+          "identifiant": {
+            "$ref": "#/components/schemas/IdentifiantReponse"
+          },
+          "etatCivil": {
+            "$ref": "#/components/schemas/EtatCivilReponse"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/AdresseReponse"
+          }
+        },
+        "description": "Correspond aux informations d'une personne physique"
+      },
+      "AdresseAvecCodePostalReponse": {
+        "type": "object",
+        "properties": {
+          "cdPays": {
+            "type": "string",
+            "description": "Code INSEE du pays de l'adresse",
+            "example": "99100"
+          },
+          "lbPays": {
+            "type": "string",
+            "description": "Libellé du pays de l'adresse",
+            "example": "FRANCE"
+          },
+          "codePostal": {
+            "type": "string",
+            "description": "codePostal",
+            "example": "75012"
+          },
+          "cdDepartement": {
+            "type": "string",
+            "description": "Code INSEE du département de l'adresse",
+            "example": "16"
+          },
+          "lbDepartement": {
+            "type": "string",
+            "description": "Libellé du département de l'adresse",
+            "example": "CHARENTE"
+          },
+          "cdTOM": {
+            "type": "string",
+            "description": "Code INSEE du TOM de l'adresse",
+            "example": "975"
+          },
+          "lbTOM": {
+            "type": "string",
+            "description": "Libellé du TOM de l'adresse",
+            "example": "ST-PIERRE-ET-MIQUELON"
+          },
+          "cdCommune": {
+            "type": "string",
+            "description": "Code INSEE de la commune de l'adresse",
+            "example": "015"
+          },
+          "lbCommune": {
+            "type": "string",
+            "description": "Libellé de la commune de l'adresse",
+            "example": "ANGOULEME"
+          },
+          "cdVoie": {
+            "type": "string",
+            "description": "Code de la de la voie de l'adresse",
+            "example": "2564"
+          },
+          "lbVoie": {
+            "type": "string",
+            "description": "Libellé de la voie de l'adresse",
+            "example": "RTE DU GAL DE GAULLE"
+          },
+          "numeroVoie": {
+            "type": "string",
+            "description": "Numéro de la voie de l'adresse",
+            "example": "35"
+          },
+          "indiceDeRepetition": {
+            "type": "string",
+            "description": "Indice de répétion de l'adresse (B = bis, T = ter, Q = quater)",
+            "example": "B"
+          },
+          "complementAdresse": {
+            "type": "string",
+            "description": "Complément d'adresse",
+            "example": "Bat A Appt n°5"
+          }
+        },
+        "description": "Informations d'adresse de la personne"
+      },
+      "PersonneSanSpiReponseEnveloppe": {
+        "type": "object",
+        "properties": {
+          "personnePhysique": {
+            "$ref": "#/components/schemas/PersonneSansSpiReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse sans spi"
+      },
+      "PersonneSansSpiReponse": {
+        "type": "object",
+        "properties": {
+          "etatCivil": {
+            "$ref": "#/components/schemas/EtatCivilReponse"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/AdresseAvecCodePostalReponse"
+          }
+        },
+        "description": "Correspond aux informations d'une personne physique sans le spi"
+      },
+      "PersonneSanSpiCoordonneesReponseEnveloppe": {
+        "type": "object",
+        "properties": {
+          "personnePhysique": {
+            "$ref": "#/components/schemas/PersonneSansSpiCoordonneesReponse"
+          }
+        },
+          "description": "Objet encapsulant la réponse sans spi avec coordonnées"
+      },
+      "PersonneSansSpiCoordonneesReponse": {
+        "type": "object",
+        "properties": {
+          "etatCivil": {
+            "$ref": "#/components/schemas/EtatCivilReponse"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/AdresseAvecCodePostalReponse"
+          },
+          "coordonnees": {
+            "$ref": "#/components/schemas/CoordonneesReponse"
+          }
+        },
+        "description": "Correspond aux informations d'une personne physique sans le spi avec ses coordonnées"
+      },
+      "IdentifiantEnveloppe": {
+        "type": "object",
+        "properties": {
+          "identifiant": {
+            "$ref": "#/components/schemas/IdentifiantReponse"
+          }
+        },
+        "description": "Objet encapsulant la réponse"
+      }
+    },
+    "parameters": {
+      "paramAuthorization": {
+        "name": "Authorization",
+        "in": "header",
+        "description": "Jeton d'authentification. Header Authorization standard, utilisant un schéma Bearer. Exemple: \"bearer {token}\"",
+        "required": true,
+        "style": "simple",
+        "explode": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "paramXCorrelationID": {
+        "name": "X-Correlation-ID",
+        "in": "header",
+        "description": "Identifiant de corrélation de la requête (format UUID)",
+        "required": true,
+        "style": "simple",
+        "explode": false,
+        "schema": {
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "type": "string",
+          "format": "uuid"
+        },
+        "example": "62d8e8ff-ce4f-4e50-b318-1edd2dab0f9f"
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "oauth2",
+        "description": "OAuth 2.0 avec un grant type Client Credentials. Header Authorization standard, utilisant un schéma Bearer. Exemple: \\\"Bearer {token}\\\"",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://IP-GATEWAY/token",
+            "scopes": {
+              "sfip_recherche_personne_physique": "Recherche de personne physique par critères",
+              "sfip_donnees_fiscales_usagers": "Restitution des données fiscales les plus récentes d'un usager",
+              "sfip_multiple_donnees_fiscales": "Restitution des données fiscales les plus récentes d'un usager avec deux déclarations en cas de décès",
+              "sfip_annee_donnees_fiscales_usagers": "Restitution des données fiscales précises de l'usager en fonction d'un millésime",
+              "sfip_ifi_donnees_fiscales": "Restitution des données fiscales avec l’indicateur d’imposition à l’IFI ()ou ISF pour les années antérieures)",
+              "sfip_2ans_donnees_fiscales": "Restitution des données fiscales disponibles d’un usager pour une année parmi les 2 dernières années disponibles",
+              "sfip_factures_donnees_fiscales": "Récupération des données les plus récentes de la ressource facture IR à partir d'un millesime",
+              "sfip_derniere_ir_multiple_donnees_fiscales": "Données fiscales les plus récentes avec la situation de veuvage en cas de décès",
+              "sfip_lep": "Restitution des données d'un usager pour le LEP",
+              "api_r2p_recherche_personne_physique": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques",
+              "api_r2p_resolution_spi": "Scope permettant d'interroger l'API R2P et de récupérer le SPI d'un individu à partir de son état civil",
+              "api_r2p_recherche_personne_physique_sans_spi": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques sans spi",
+              "api_sfip_recherche_personne_physique_coordonnees": "Scope permettant d'interroger l'API SFIP et de récupérer les informations sur les personnes physiques avec ses coordonnées"
+            },
+            "x-scopes-bindings": {
+              "sfip_recherche_personne_physique": "",
+              "sfip_donnees_fiscales_usagers": "",
+              "sfip_multiple_donnees_fiscales": "",
+              "sfip_annee_donnees_fiscales_usagers": "",
+              "sfip_ifi_donnees_fiscales": "",
+              "sfip_2ans_donnees_fiscales": "",
+              "sfip_factures_donnees_fiscales": "",
+              "sfip_derniere_ir_multiple_donnees_fiscales": "",
+              "sfip_lep": "",
+              "api_r2p_recherche_personne_physique": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques",
+              "api_r2p_resolution_spi": "Scope permettant d'interroger l'API R2P et de récupérer le SPI d'un individu à partir de son état civil",
+              "api_r2p_recherche_personne_physique_sans_spi": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques sans spi",
+              "api_sfip_recherche_personne_physique_coordonnees": "Scope permettant d'interroger l'API SFIP et de récupérer les informations sur les personnes physiques avec ses coordonnées"
+            }
+          }
+        }
+      },
+      "default": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://10.156.14.219:468/authorize",
+            "scopes": {
+              "sfip_ifi_donnees_fiscales": "Restitution des données fiscales avec l’indicateur d’imposition à l’IFI ()ou ISF pour les années antérieures)",
+              "sfip_factures_donnees_fiscales": "Récupération des données les plus récentes de la ressource facture IR à partir d'un millesime",
+              "sfip_multiple_donnees_fiscales": "Restitution des données fiscales les plus récentes d'un usager avec deux déclarations en cas de décès",
+              "sfip_recherche_personne_physique": "Recherche de personne physique par critères",
+              "sfip_annee_donnees_fiscales_usagers": "Restitution des données fiscales précises de l'usager en fonction d'un millésime",
+              "sfip_lep": "Restitution des données d'un usager pour le LEP",
+              "sfip_donnees_fiscales_usagers": "Restitution des données fiscales les plus récentes d'un usager",
+              "sfip_2ans_donnees_fiscales": "Restitution des données fiscales disponibles d’un usager pour une année parmi les 2 dernières années disponibles",
+              "sfip_derniere_ir_multiple_donnees_fiscales": "Données fiscales les plus récentes avec la situation de veuvage en cas de décès",
+              "api_r2p_recherche_personne_physique": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques",
+              "api_r2p_resolution_spi": "Scope permettant d'interroger l'API R2P et de récupérer le SPI d'un individu à partir de son état civil",
+              "api_r2p_recherche_personne_physique_sans_spi": "Scope permettant d'interroger l'API R2P et de récupérer les informations sur les personnes physiques sans spi",
+              "api_sfip_recherche_personne_physique_coordonnees": "Scope permettant d'interroger l'API SFIP et de récupérer les informations sur les personnes physiques avec ses coordonnées"
+            },
+            "x-scopes-bindings": {
+              "sfip_recherche_personne_physique": "",
+              "sfip_multiple_donnees_fiscales": "",
+              "sfip_donnees_fiscales_usagers": "",
+              "sfip_lep": "",
+              "sfip_2ans_donnees_fiscales": "",
+              "sfip_derniere_ir_multiple_donnees_fiscales": "",
+              "sfip_factures_donnees_fiscales": "",
+              "sfip_annee_donnees_fiscales_usagers": "",
+              "sfip_ifi_donnees_fiscales": "",
+              "api_r2p_recherche_personne_physique": "",
+              "api_r2p_resolution_spi": "",
+              "api_r2p_recherche_personne_physique_sans_spi": "",
+              "api_sfip_recherche_personne_physique_coordonnees": ""
+            }
+          }
+        }
+      }
+    }
+  }
+}
